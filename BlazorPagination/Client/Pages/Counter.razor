@@ -1,5 +1,7 @@
 ﻿@page "/counter"
 
+@inject IPeopleService peopleService
+
 <PageTitle>Counter</PageTitle>
 
 <h1>Counter</h1>
@@ -8,11 +10,28 @@
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
+@if (people == null )
+{
+    <span>Loading</span>
+}
+else
+{
+        @foreach (var product in people.Data)
+        {
+            <p>@product.FirstName</p>
+        }
+}
+
 @code {
     private int currentCount = 0;
 
     private void IncrementCount()
     {
         currentCount++;
+    }
+    ServiceResponse<List<People>> people;
+    protected override async Task OnInitializedAsync()
+    {
+        people = await peopleService.GetPeopleAsync();
     }
 }

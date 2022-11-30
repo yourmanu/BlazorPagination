@@ -1,0 +1,69 @@
+﻿@page "/peoplelist"
+@page "/peoplelist/{page}"
+@inject IPeopleService peopleService
+<h3>PeopleList</h3>
+
+@if (people == null)
+{
+        <span>Loading</span>
+}
+else
+{
+    <Pagination TotalPages="totalPages" CurrentPage="currentPage" Radius="3" SelectedPage="SelectedPage"></Pagination>
+
+    <table class="table table-hover table align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Gender</th>
+                <th>Date of Birth</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var people in people.Data)
+            {
+            <tr>
+                    <td>@people.Id</td>
+                    <td>@people.FirstName</td>
+                    <td>@people.LastName</td>
+                    <td>@people.Gender</td>
+                    <td>@people.DateOfBirth</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+
+}
+@code {
+    ServiceResponse<List<People>> people;
+    private int totalPages;
+
+    [Parameter] public int Page { get; set; } = 0;
+    private int currentPage = 1;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Page > 0)
+        {
+            currentPage = Page;
+        }
+                await LoadPeople(currentPage);
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPeople(currentPage);
+    }
+
+    async Task LoadPeople(int page=1,int rowsPerPage=18)
+    {
+        people = await peopleService.GetPeopleAsync(page,rowsPerPage);
+        totalPages = people.NumberOfPages;
+    }
+    private async Task SelectedPage(int page)
+    {
+        currentPage = page;
+        await LoadPeople(page);
+    }
+}

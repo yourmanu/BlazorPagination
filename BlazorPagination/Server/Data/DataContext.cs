@@ -11,5 +11,6 @@ namespace BlazorPagination.Server.Data
         }
 
         public DbSet<Car> Cars => Set<Car>();
+        public DbSet<People> People => Set<People>();
     }
 }

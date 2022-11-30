@@ -1,4 +1,5 @@
 using BlazorPagination.Server.Data;
+using BlazorPagination.Server.Services;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,16 +12,24 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 }); // ++
 
+builder.Services.AddScoped<IPeopleService, PeopleService>();
+builder.Services.AddScoped<ICarService, CarService>();
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
 
 //swagger support ++
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+
 var app = builder.Build();
 
 app.UseSwaggerUI(); //++
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
