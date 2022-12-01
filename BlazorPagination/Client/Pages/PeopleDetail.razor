@@ -1,0 +1,49 @@
+﻿@page "/peopledetail/{id:int}"
+@inject IPeopleService peopleService
+
+@if(people != null)
+{
+    
+
+    <div class="row gx-2">
+        <div class="col-md-9">
+            <div class="p-3  border rounded">
+
+                <p class="h3 m-1 text-muted">PeopleDetail</p>
+
+                <p class="text-muted m-1">FirstName</p>
+                <p class="h6 m-1">@people.FirstName</p>
+                <p class="text-muted m-1">LastName</p>
+                <p class="h6 m-1">@people.LastName</p>
+                <p class="text-muted m-1">Gender</p>
+                <p class="h6 m-1">@people.Gender</p>
+                <p class="text-muted m-1">Email</p>
+                <p class="h6 m-1">@people.Email</p>
+
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="p-3  border rounded order-lg-last">
+                <p class="h3 text-muted">Contacts</p>
+                <p class="h6 m-0">Sivkumar</p>
+                <p class="h6 m-0">Thinayanplackal</p>
+            </div>
+        </div>
+    </div>
+    <div class="row gx-2">
+        <div class="col-md-12">
+            <div class="p-3 mt-2 border rounded"></div>
+        </div>
+    </div>
+}
+
+@code {
+
+    [Parameter] public int Id { get; set; }
+    People people;
+    protected override async Task OnParametersSetAsync()
+    {
+        people = await peopleService.GetPeopleByIdAsync(Id);
+
+    }
+}

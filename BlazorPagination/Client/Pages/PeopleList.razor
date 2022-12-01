@@ -1,6 +1,8 @@
 ﻿@page "/peoplelist"
-@page "/peoplelist/{page}"
+@page "/peoplelist/{page:int}"
 @inject IPeopleService peopleService
+@inject NavigationManager NavManager
+
 <h3>PeopleList</h3>
 
 @if (people == null)
@@ -19,17 +21,19 @@ else
                 <th>Last Name</th>
                 <th>Gender</th>
                 <th>Date of Birth</th>
+                <th>View</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var people in people.Data)
             {
-            <tr>
+                <tr @onclick='()=>NavManager.NavigateTo($"/peopledetail/{people.Id}",false)'>
                     <td>@people.Id</td>
                     <td>@people.FirstName</td>
                     <td>@people.LastName</td>
                     <td>@people.Gender</td>
                     <td>@people.DateOfBirth</td>
+                    <td><a href="/peopledetail/@people.Id">Detail</a> </td>
             </tr>
             }
         </tbody>
@@ -39,17 +43,16 @@ else
 @code {
     ServiceResponse<List<People>> people;
     private int totalPages;
-
-    [Parameter] public int Page { get; set; } = 0;
     private int currentPage = 1;
-
+    [Parameter] public int Page { get; set; } = 1;
     protected override async Task OnParametersSetAsync()
     {
         if (Page > 0)
         {
             currentPage = Page;
+            await LoadPeople(Page);
         }
-                await LoadPeople(currentPage);
+
     }
     protected override async Task OnInitializedAsync()
     {

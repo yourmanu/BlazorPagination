@@ -6,6 +6,7 @@ namespace BlazorPagination.Client.Services
     public interface IPeopleService
     {
         Task<ServiceResponse<List<People>>> GetPeopleAsync(int page=1,int rowsPerPage=18);
+        Task<People> GetPeopleByIdAsync(int id);
     }
 
     public class PeopleService : IPeopleService
@@ -28,6 +29,18 @@ namespace BlazorPagination.Client.Services
                 return result;
             }
 
+            return null;
+        }
+
+        public async Task<People> GetPeopleByIdAsync(int id)
+        {
+            var httpResponse = await _http.GetAsync($"people/getpeoplebyid/{id}");
+            if (httpResponse.IsSuccessStatusCode)
+            {
+                var responseString = await httpResponse.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<People>(responseString, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                return result;
+            }
             return null;
         }
     }

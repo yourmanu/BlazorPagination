@@ -24,5 +24,12 @@ namespace BlazorPagination.Server.Controllers
             await HttpContext.InsertPaginationParameterInResponse(result.NumberOfPages);
             return result;
         }
+        [HttpGet]
+        [Route("getPeopleById/{id:int}")]
+        public async Task<People> GetPeopleById(int id)
+        {
+            var result = await _peopleService.GetPeopleByIdAsync(id);
+            return result;
+        }
     }
 }

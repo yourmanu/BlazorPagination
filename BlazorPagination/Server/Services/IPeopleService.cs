@@ -9,6 +9,7 @@ namespace BlazorPagination.Server.Services
     public interface IPeopleService
     {
         Task<ServiceResponse<List<People>>> GetPeopleAsync(PaginationInfo paginationInfo);
+        Task<People?> GetPeopleByIdAsync(int id);
     }
 
     public class PeopleService : IPeopleService
@@ -21,7 +22,7 @@ namespace BlazorPagination.Server.Services
         }
         public async Task<ServiceResponse<List<People>>> GetPeopleAsync(PaginationInfo paginationInfo)
         {
-            var queryable = _context.People.AsQueryable();
+            var queryable = _context.People.OrderBy(c => c.Id).AsQueryable();
             var response = new ServiceResponse<List<People>>()
             {
                 //Data = await _context.People.Skip((currentPage-1)*rowsPerPage).Take(rowsPerPage).ToListAsync()
@@ -30,6 +31,13 @@ namespace BlazorPagination.Server.Services
 
             };
             return response;
+        }
+
+        public async Task<People?> GetPeopleByIdAsync(int id)
+        {
+            People? people = _context.People.Where(p=>p.Id==id).FirstOrDefault();
+
+            return people;
         }
     }
 
