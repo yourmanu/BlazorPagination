@@ -1,15 +1,16 @@
 ﻿@page "/peopledetail/{id:int}"
 @inject IPeopleService peopleService
 @inject ICarService carService
-
+@inject NavigationManager NavManager
 
 @if (people != null)
 {
+    <button type="button" class="btn btn-info mb-2" @onclick='()=>NavManager.NavigateTo($"/peoplelist/5",false)'>Back</button>
     <div class="row gx-2">
-        <div class="col-md-9 col-lg-6">
+        <div class="col-md-4">
             <div class="p-3  border rounded">
 
-                <p class="h3 m-1 text-muted">PeopleDetail</p>
+                <p class="h3 m-1 text-muted">People Detail</p>
 
                 <p class="text-muted m-1">FirstName</p>
                 <p class="h6 m-1">@people.FirstName</p>
@@ -22,17 +23,22 @@
 
             </div>
         </div>
-        <div class="col-md-3 col-lg-6">
+        <div class="col-md-4">
             <div class="p-3  border rounded order-lg-last">
                 <p class="h3 text-muted">Cars Owned</p>
 
 
 
-                <table class="table table-hover table align-middle">
+                <table class="table table-borderless table-hover table align-middle">
                     <tbody>
                         @foreach (var car in cars)
                         {
-                            <tr>
+                            if (SelectedCar == null)
+                            {
+                                SelectedCar = car;
+                            }
+                            string colorClass = (car == SelectedCar) ? "table-active" : "";
+                            <tr class="@colorClass" @onclick="() => { SelectedCar = car; }">
                                 <td class="h6 m-1">@car.Model</td>
                             </tr>
                         }
@@ -41,17 +47,28 @@
 
             </div>
         </div>
-    </div>
-    <div class="row gx-2">
-        <div class="col-md-12">
-            <div class="p-3 mt-2 border rounded"></div>
+        <div class="col-md-4">
+            <div class="p-3 border rounded">
+                <p class="h3 m-1 text-muted">Car Spec</p>
+
+                <p class="text-muted m-1">Model</p>
+                <p class="h6 m-1">@SelectedCar.Model</p>
+                <p class="text-muted m-1">Make</p>
+                <p class="h6 m-1">@SelectedCar.Make</p>
+                <p class="text-muted m-1">Year</p>
+                <p class="h6 m-1">@SelectedCar.Year</p>
+                <p class="text-muted m-1">HP</p>
+                <p class="h6 m-1">@SelectedCar.Hp</p>
+
+            </div>
         </div>
     </div>
+
 }
 
 @code {
     [Parameter] public int Id { get; set; }
-
+    public Car SelectedCar { get; set; }
     People people;
     List<Car> cars = new List<Car>();
 
@@ -59,6 +76,7 @@
     {
         var carResp = await carService.GetSomeCarAsync();
         cars = carResp.Data;
+
         people = await peopleService.GetPeopleByIdAsync(Id);
 
     }
