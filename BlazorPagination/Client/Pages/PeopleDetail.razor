@@ -1,12 +1,12 @@
 ﻿@page "/peopledetail/{id:int}"
 @inject IPeopleService peopleService
+@inject ICarService carService
 
-@if(people != null)
+
+@if (people != null)
 {
-    
-
     <div class="row gx-2">
-        <div class="col-md-9">
+        <div class="col-md-9 col-lg-6">
             <div class="p-3  border rounded">
 
                 <p class="h3 m-1 text-muted">PeopleDetail</p>
@@ -22,11 +22,23 @@
 
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 col-lg-6">
             <div class="p-3  border rounded order-lg-last">
-                <p class="h3 text-muted">Contacts</p>
-                <p class="h6 m-0">Sivkumar</p>
-                <p class="h6 m-0">Thinayanplackal</p>
+                <p class="h3 text-muted">Cars Owned</p>
+
+
+
+                <table class="table table-hover table align-middle">
+                    <tbody>
+                        @foreach (var car in cars)
+                        {
+                            <tr>
+                                <td class="h6 m-1">@car.Model</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
             </div>
         </div>
     </div>
@@ -38,11 +50,15 @@
 }
 
 @code {
-
     [Parameter] public int Id { get; set; }
+
     People people;
+    List<Car> cars = new List<Car>();
+
     protected override async Task OnParametersSetAsync()
     {
+        var carResp = await carService.GetSomeCarAsync();
+        cars = carResp.Data;
         people = await peopleService.GetPeopleByIdAsync(Id);
 
     }

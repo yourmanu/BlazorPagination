@@ -19,8 +19,6 @@ namespace BlazorPagination.Client.Services
         }
         public async Task<ServiceResponse<List<People>>> GetPeopleAsync(int page = 1, int rowsPerPage = 18)
         {
-            //var result = await _http.GetFromJsonAsync<ServiceResponse<List<People>>>($"people?currentPage={page}&rowsPerPage={rowsPerPage}");
-            //return result;
             var httpResponse = await _http.GetAsync($"people?currentPage={page}&rowsPerPage={rowsPerPage}");
             if(httpResponse.IsSuccessStatusCode)
             {
@@ -44,5 +42,7 @@ namespace BlazorPagination.Client.Services
             return null;
         }
     }
+
+  
 
 }

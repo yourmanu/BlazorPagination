@@ -25,7 +25,6 @@ namespace BlazorPagination.Server.Services
             var queryable = _context.People.OrderBy(c => c.Id).AsQueryable();
             var response = new ServiceResponse<List<People>>()
             {
-                //Data = await _context.People.Skip((currentPage-1)*rowsPerPage).Take(rowsPerPage).ToListAsync()
                 Data = await queryable.Paginate(paginationInfo).ToListAsync(),
                 NumberOfPages   = queryable.Count()/paginationInfo.RowsPerPage
 
