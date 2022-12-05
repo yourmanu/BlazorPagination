@@ -2,7 +2,7 @@
 @page "/peoplelist/{page:int}"
 @inject IPeopleService peopleService
 @inject NavigationManager NavManager
-
+@inject IStateContainer stateContainer
 <h3>People List</h3>
 
 @if (people == null)
@@ -27,7 +27,8 @@ else
         <tbody>
             @foreach (var people in people.Data)
             {
-                <tr @onclick='()=>NavManager.NavigateTo($"/peopledetail/{people.Id}",false)'>
+               @* <tr @onclick='()=>NavManager.NavigateTo($"/peopledetail/{people.Id}",false)'>*@
+                <tr @onclick='()=>NavigateToSelectedPage($"/peopledetail/{people.Id}")'>
                     <td>@people.Id</td>
                     <td>@people.FirstName</td>
                     <td>@people.LastName</td>
@@ -68,5 +69,10 @@ else
     {
         currentPage = page;
         await LoadPeople(page);
+    }
+    private void  NavigateToSelectedPage(string url)
+    {
+        stateContainer.LastPageNo = currentPage;
+        NavManager.NavigateTo(url, false);
     }
 }

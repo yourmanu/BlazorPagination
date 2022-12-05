@@ -10,4 +10,5 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddScoped<IPeopleService, PeopleService>();
 builder.Services.AddScoped<ICarService, CarService>();
+builder.Services.AddScoped<IStateContainer, StateContainer>();
 await builder.Build().RunAsync();

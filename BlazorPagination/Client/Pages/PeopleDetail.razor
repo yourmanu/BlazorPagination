@@ -2,10 +2,10 @@
 @inject IPeopleService peopleService
 @inject ICarService carService
 @inject NavigationManager NavManager
-
+@inject IStateContainer stateContainer
 @if (people != null)
 {
-    <button type="button" class="btn btn-info mb-2" @onclick='()=>NavManager.NavigateTo($"/peoplelist/5",false)'>Back</button>
+    <button type="button" class="btn btn-info mb-2" @onclick='()=>NavManager.NavigateTo($"/peoplelist/{stateContainer.LastPageNo}",false)'>Back</button>
     <div class="row gx-2">
         <div class="col-md-4">
             <div class="p-3  border rounded">
